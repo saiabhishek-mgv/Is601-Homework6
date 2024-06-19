@@ -11,5 +11,3 @@ class SubtractCommand(Command):
             print(f"Result: {result}")
         except Exception as e:
             print(f"Error in subtraction: {e}")
-
-
