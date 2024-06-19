@@ -1,49 +1,76 @@
 import pytest
-from calculator.commands.add import AddCommand
-from calculator.commands.subtract import SubtractCommand
-from calculator.commands.multiply import MultiplyCommand
-from calculator.commands.divide import DivideCommand
+from calculator.commands import CommandHandler
+from calculator.plugins.add import AddCommand
+from calculator.plugins.subtract import SubtractCommand
+from calculator.plugins.multiply import MultiplyCommand
+from calculator.plugins.divide import DivideCommand
 
-def test_add_command_invalid_input(capfd):
+def test_add_command():
+    handler = CommandHandler()
     add_command = AddCommand()
-    add_command.execute('1')
-    out, _ = capfd.readouterr()
-    assert "Add command requires exactly two arguments" in out
+    handler.register_command("add", add_command)
+    handler.execute_command("add 2 3")
 
-    add_command.execute('a', '2')
-    out, _ = capfd.readouterr()
-    assert "Error in addition" in out
-
-def test_divide_command_invalid_input(capfd):
-    divide_command = DivideCommand()
-    divide_command.execute('5')
-    out, _ = capfd.readouterr()
-    assert "Divide command requires exactly two arguments" in out
-
-    divide_command.execute('5', 'a')
-    out, _ = capfd.readouterr()
-    assert "Error in division" in out
-
-    divide_command.execute('5', '0')
-    out, _ = capfd.readouterr()
-    assert "Error: Cannot divide by zero" in out
-
-def test_subtract_command_invalid_input(capfd):
+def test_subtract_command():
+    handler = CommandHandler()
     subtract_command = SubtractCommand()
-    subtract_command.execute('1')
-    out, _ = capfd.readouterr()
-    assert "Subtract command requires exactly two arguments" in out
+    handler.register_command("subtract", subtract_command)
+    handler.execute_command("subtract 5 3")
 
-    subtract_command.execute('5', 'a')
-    out, _ = capfd.readouterr()
-    assert "Error in subtraction" in out
+def test_subtract_command_missing_arguments():
+    subtract_command = SubtractCommand()
+    with pytest.raises(ValueError, match="Subtract command requires exactly two arguments."):
+        subtract_command.execute("5")
 
-def test_multiply_command_invalid_input(capfd):
+def test_subtract_command_non_numeric():
+    subtract_command = SubtractCommand()
+    with pytest.raises(ValueError):
+        subtract_command.execute("five", "3")
+
+def test_multiply_command():
+    handler = CommandHandler()
     multiply_command = MultiplyCommand()
-    multiply_command.execute('1')
-    out, _ = capfd.readouterr()
-    assert "Multiply command requires exactly two arguments" in out
+    handler.register_command("multiply", multiply_command)
+    handler.execute_command("multiply 4 3")
 
-    multiply_command.execute('a', '2')
-    out, _ = capfd.readouterr()
-    assert "Error in multiplication" in out
+def test_multiply_command_missing_arguments():
+    multiply_command = MultiplyCommand()
+    with pytest.raises(ValueError, match="Multiply command requires exactly two arguments."):
+        multiply_command.execute("5")
+
+def test_multiply_command_non_numeric():
+    multiply_command = MultiplyCommand()
+    with pytest.raises(ValueError):
+        multiply_command.execute("five", "3")
+
+def test_divide_command():
+    handler = CommandHandler()
+    divide_command = DivideCommand()
+    handler.register_command("divide", divide_command)
+    handler.execute_command("divide 10 2")
+
+def test_divide_by_zero_command():
+    handler = CommandHandler()
+    divide_command = DivideCommand()
+    handler.register_command("divide", divide_command)
+    handler.execute_command("divide 10 0")
+
+def test_divide_command_missing_arguments():
+    divide_command = DivideCommand()
+    with pytest.raises(ValueError, match="Divide command requires exactly two arguments."):
+        divide_command.execute("5")
+
+def test_divide_command_non_numeric():
+    divide_command = DivideCommand()
+    with pytest.raises(ValueError):
+        divide_command.execute("five", "3")
+
+def test_add_command_missing_arguments():
+    add_command = AddCommand()
+    with pytest.raises(ValueError, match="Add command requires exactly two arguments."):
+        add_command.execute("5")
+
+def test_add_command_non_numeric():
+    add_command = AddCommand()
+    with pytest.raises(ValueError):
+        add_command.execute("five", "3")

@@ -32,7 +32,6 @@ class Calculator:
                             command_class = getattr(module, attr)
                             if callable(command_class) and issubclass(command_class, Command):
                                 if command_class.__module__ == module_name:
-                                    try:
                                         if attr == "MenuCommand":
                                             instance = command_class(self.command_handler)
                                         else:
@@ -40,9 +39,6 @@ class Calculator:
                                         command_name = instance.__class__.__name__.replace('Command', '').lower()
                                         # print(f"Registering command: {command_name}")  # Removed debug print
                                         self.command_handler.register_command(command_name, instance)
-                                    except TypeError as e:
-                                        # print(f"Skipping abstract or invalid class: {attr} - {e}")  # Removed debug print
-                                        pass
 
     def start(self):
         print("Type 'menu' to see the list of available commands or 'exit' to exit.")
@@ -53,9 +49,5 @@ class Calculator:
                     print("Exiting the calculator. Goodbye!")
                     break
                 self.command_handler.execute_command(user_input)
-            except ValueError as e:
-                print(f"Value error: {e}")
-            except KeyError as e:
-                print(f"Key error: {e}")
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")

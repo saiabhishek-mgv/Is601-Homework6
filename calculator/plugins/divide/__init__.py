@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from calculator.commands import Command
 
 class DivideCommand(Command):
@@ -11,9 +11,6 @@ class DivideCommand(Command):
                 raise ZeroDivisionError("Cannot divide by zero.")
             result = a / b
             print(f"Result: {result}")
-        except ZeroDivisionError as e:
-            print(f"Error: {e}")
-        except Exception as e:
-            print(f"Error in division: {e}")
-
+        except InvalidOperation:
+            raise ValueError("Invalid input for Decimal conversion.")
 

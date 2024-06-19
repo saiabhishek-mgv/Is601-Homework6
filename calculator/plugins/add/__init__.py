@@ -1,13 +1,15 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from calculator.commands import Command
 
 class AddCommand(Command):
     def execute(self, *args):
+        if len(args) != 2:
+            raise ValueError("Add command requires exactly two arguments.")
         try:
-            if len(args) != 2:
-                raise ValueError("Add command requires exactly two arguments.")
-            a, b = Decimal(args[0]), Decimal(args[1])
+            a = Decimal(args[0])
+            b = Decimal(args[1])
             result = a + b
             print(f"Result: {result}")
-        except Exception as e:
-            print(f"Error in addition: {e}")
+        except InvalidOperation:
+            raise ValueError("Invalid input for Decimal conversion.")
+

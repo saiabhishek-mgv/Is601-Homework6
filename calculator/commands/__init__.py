@@ -13,11 +13,10 @@ class CommandHandler:
         self.commands[command_name] = command
 
     def execute_command(self, user_input: str):
+        if not user_input.strip():
+            raise ValueError("No input provided.")
+        
         parts = user_input.split()
-        if not parts:
-            print("No input provided.")
-            return
-
         command_name = parts[0]
         args = parts[1:]
 
@@ -28,3 +27,4 @@ class CommandHandler:
                 print(f"Error executing command '{command_name}': {e}")
         else:
             print(f"No such command: {command_name}")
+
