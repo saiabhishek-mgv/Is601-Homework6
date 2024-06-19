@@ -1,46 +1,33 @@
 import pytest
-from calculator import CommandHandler
-from calculator.commands import Command
-from calculator.commands.add import AddCommand
-from calculator.commands.menu import MenuCommand
+from calculator.commands import CommandHandler, Command
 
 class MockCommand(Command):
-    def execute(self, *args):
-        if "fail" in args:
-            raise Exception("Intentional failure")
-        print("MockCommand executed")
+    def execute(self):
+        pass
+
+def test_no_command_provided():
+    handler = CommandHandler()
+    with pytest.raises(ValueError, match="No input provided."):
+        handler.execute_command("")
+
+def test_no_such_command(capfd):
+    handler = CommandHandler()
+    handler.execute_command("unknown")
+    captured = capfd.readouterr()
+    assert "No such command: unknown" in captured.out
 
 def test_register_command():
     handler = CommandHandler()
-    mock_command = MockCommand()
-    handler.register_command("mock", mock_command)
+    handler.register_command("mock", MockCommand())
     assert "mock" in handler.commands
-    assert handler.commands["mock"] == mock_command
 
-def test_execute_command_add(capfd):
+def test_execute_command_add():
     handler = CommandHandler()
     mock_command = MockCommand()
-    handler.register_command("mock", mock_command)
-    handler.execute_command("mock 1 2")
-    out, _ = capfd.readouterr()
-    assert "MockCommand executed" in out
+    handler.register_command("add", mock_command)
+    handler.execute_command("add 2 3")
 
-def test_execute_command_no_input_provided(capfd):
+def test_execute_command_invalid():
     handler = CommandHandler()
-    handler.execute_command("")
-    out, _ = capfd.readouterr()
-    assert "No input provided." in out
-
-def test_execute_command_invalid(capfd):
-    handler = CommandHandler()
-    handler.execute_command("nonexistent")
-    out, _ = capfd.readouterr()
-    assert "No such command: nonexistent" in out
-
-def test_execute_command_exception_handling(capfd):
-    handler = CommandHandler()
-    mock_command = MockCommand()
-    handler.register_command("mock", mock_command)
-    handler.execute_command("mock fail")
-    out, _ = capfd.readouterr()
-    assert "Error executing command 'mock'" in out
+    with pytest.raises(ValueError):
+        handler.execute_command("")

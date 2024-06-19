@@ -8,16 +8,15 @@ class Command(ABC):
 class CommandHandler:
     def __init__(self):
         self.commands = {}
-    
+
     def register_command(self, command_name: str, command: Command):
         self.commands[command_name] = command
-    
-    def execute_command(self, user_input: str):
-        parts = user_input.split()
-        if not parts:
-            print("No input provided.")
-            return
 
+    def execute_command(self, user_input: str):
+        if not user_input.strip():
+            raise ValueError("No input provided.")
+        
+        parts = user_input.split()
         command_name = parts[0]
         args = parts[1:]
 
@@ -29,5 +28,3 @@ class CommandHandler:
         else:
             print(f"No such command: {command_name}")
 
-
-        

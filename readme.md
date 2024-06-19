@@ -1,12 +1,9 @@
-## Homework4 
+## Homework5
 
 I have used the previous repository from homework3- version3 as the main branch.
-Created another branch faker and made following changes in the faker branch
-1. Installed faker
-2. Updated the requirements.txt file
-3. Updated the test files to generate test data using faker
-4. Added main function for command line access of the caculator
-
+Refactored the code using REPL and implemented the command line pattern
+Implemented the menu command which shows all the available commands
+Implemented the plugin architecture
 Merged it with the main branch and pushed to this repo
 
 ### Installation and Testing
@@ -16,5 +13,6 @@ Merged it with the main branch and pushed to this repo
 4. pytest
 5. pytest --pylint
 6. pytest --pylint --cov
-7. pytest --num_records=10
-8. python main.py 1 2 add
+8. python main.py
+9. Click menu to look at the commands available
+10. Example command: add 1 2

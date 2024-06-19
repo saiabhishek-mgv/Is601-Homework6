@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from calculator.commands import Command
 
 class MultiplyCommand(Command):
@@ -9,6 +9,6 @@ class MultiplyCommand(Command):
             a, b = Decimal(args[0]), Decimal(args[1])
             result = a * b
             print(f"Result: {result}")
-        except Exception as e:
-            print(f"Error in multiplication: {e}")
+        except InvalidOperation:
+            raise ValueError("Invalid input for Decimal conversion.")
 
